@@ -1,0 +1,54 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@theme {
+  --bg-primary: #212124;
+  --bg-secondary: #27272A;
+  --neon-green: #A9E851;
+  --neon-shadow: #A9E85133;
+  --text-primary: #F4F4F5;
+  --text-secondary: #A1A1AA;
+  --width-primary: 1440px;
+  --large-page-padding: 1.8rem;
+  --small-page-padding: 1rem;
+  --text-neon-button: #18181B;
+  --border: #FFFFFF14;
+}
+
+body{
+  font-family: 'Inter';
+  background-color: var(--bg-primary);
+  max-width: var(--width-primary);
+  color: var(--text-primary);
+  margin-inline: auto;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer utilities {
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+}
+
+  input[type="radio"]:checked::before {
+    content: '✔';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    color: var(--bg-primary);
+  }
