@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import icon from "../icon.svg"
 import { MdOutlineWallet } from "react-icons/md";
 import Button from '../components/Button';
@@ -7,14 +7,28 @@ import { LuRefreshCw } from "react-icons/lu";
 import Table from '../components/Table';
 import DoughnutChart from '../components/DoughnutChart';
 import Modal from '../components/Modal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { actions } from '../actions/watchlistActions';
 
 const Dashboard = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
+    const dispatch = useDispatch();
     const watchlist = useSelector(state => state.portfolio.watchlist);
+
     const portfolioTotal = watchlist.reduce((sum, coin) => sum + (coin.value || 0), 0);
+
+    const lastUpdated = useSelector((state) => state.portfolio.lastUpdated);
+
+    const handleManualRefresh = () => {
+        console.log("refresh button clicked")
+        if (watchlist.length > 0) {
+            dispatch(actions.updateWatchlistData());
+        }
+    };
+
+    console.log("watchlist: ", watchlist)
 
     return (
         <div className='md:p-(--large-page-padding) p-(--small-page-padding)'>
@@ -30,24 +44,35 @@ const Dashboard = () => {
             <main className='py-7 flex flex-col gap-12'>
                 {/* hero banner */}
                 <div className='bg-(--bg-secondary) rounded-xl p-6 flex gap-12 md:flex-row flex-col md:gap-0'>
-                    <div className='flex flex-col justify-between gap-5 h-full w-full'>
+                    <div className='flex flex-col justify-between gap-5 h-auto  w-full'>
                         <div className='flex flex-col gap-2'>
                             <p className='text-(--text-secondary) font-medium'>Portfolio Total</p>
                             <p className='text-[56px] font-medium'>${portfolioTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                         </div>
-                        <div className='text-(--text-secondary) text-xs '>Last updated: 3:42:12 PM</div>
+                        {lastUpdated && (
+                            <div className='text-(--text-secondary) text-xs '>Last updated: {new Date(lastUpdated).toLocaleTimeString()}</div>
+                        )}
                     </div>
 
                     <div className='h-full w-full'>
                         <div>
                             <p className='text-(--text-secondary) font-medium'>Portfolio Total</p>
                         </div>
-                        <div className='mt-4 w-full flex gap-5 xl:flex-row flex-col items-center xl:items-start'>
-                            <DoughnutChart />
-                            <div className='flex justify-between w-full gap-5 mt-2'>
-                                <p className='font-medium'>Bitcoin (BTC)</p>
-                                <p className='text-(--text-secondary) font-medium'>21%</p>
+                        <div className='mt-4 w-full flex gap-5 xl:flex-row flex-col items-center xl:items-start h-full'>
+                            <DoughnutChart portfolioData={watchlist} />
+                            <div className='flex flex-col justify-between gap-2 h-auto'>
+                                {watchlist.map((coin, i, arr) => {
+                                    const total = arr.reduce((acc, c) => acc + c.value, 0);
+                                    const percentage = ((coin.value / total) * 100).toFixed(2);
+                                    return (
+                                        <div key={i} className='flex justify-between w-full gap-5 mt-2'>
+                                            <p className='font-medium'>{coin.name}</p>
+                                            <p className='text-(--text-secondary) font-medium'>{percentage}%</p>
+                                        </div>
+                                    )
+                                })}
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -61,10 +86,10 @@ const Dashboard = () => {
                         </div>
                         <div className='flex items-center gap-3'>
                             <div className='hidden md:block'>
-                                <Button icon={<LuRefreshCw className='text-(--text-secondary) text-sm' />} text={"Refresh Prices"} borderRadius={'rounded-lg border border-[#0000001F]'} bgColor={"bg-(--bg-secondary)"}
+                                <Button handleClick={handleManualRefresh} icon={<LuRefreshCw className='text-(--text-secondary) text-sm' />} text={"Refresh Prices"} borderRadius={'rounded-lg border border-[#0000001F]'} bgColor={"bg-(--bg-secondary)"}
                                 />
                             </div>
-                            <button className='md:hidden bg-(--bg-secondary) rounded-lg border border-[#0000001F] p-3'>
+                            <button onClick={handleManualRefresh} className='md:hidden bg-(--bg-secondary) rounded-lg border border-[#0000001F] p-3'>
                                 <LuRefreshCw className='text-(--text-secondary) text-sm' />
                             </button>
 

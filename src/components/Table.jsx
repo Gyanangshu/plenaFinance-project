@@ -13,6 +13,8 @@ const Table = () => {
     const [editingHoldings, setEditingHoldings] = useState({});
     const [openMenu, setOpenMenu] = useState(null);
     const menuRef = useRef(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -52,6 +54,12 @@ const Table = () => {
         };
     }, []);
 
+    const totalItems = watchlist.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+    const currentData = watchlist.slice(startIndex, endIndex);
+
     console.log("Open Menu: ", openMenu)
     console.log("Watchlist table data: ", watchlist)
 
@@ -70,7 +78,7 @@ const Table = () => {
                     </tr>
                 </thead>
 
-                {watchlist.length === 0 ? (
+                {totalItems === 0 ? (
                     <tbody>
                         <tr>
                             <td className='px-8 py-4 text-(--text-secondary)' colSpan={7}>No Tokens Added </td>
@@ -78,7 +86,7 @@ const Table = () => {
                     </tbody>
                 ) : (
                     <tbody>
-                        {watchlist.map((coin) => (
+                        {currentData.map((coin) => (
                             <tr key={coin.id} className='hover:bg-(--bg-secondary)'>
                                 <td className='px-8 py-4 max-w-[206px]'>
                                     <div className="flex items-center">
@@ -162,16 +170,41 @@ const Table = () => {
                 )}
 
             </table>
-            <div className='min-w-[1200px] flex justify-between w-full py-4 px-8 text-nowrap border-t border-(--border) font-medium text-sm text-(--text-secondary)'>
-                <p>1 - 10 of 100 results</p>
-                <div className='flex items-center gap-4'>
-                    <p>1 of 10 pages</p>
+            {totalItems > 0 ? (
+                <div className='min-w-[1200px] flex justify-between w-full py-4 px-8 text-nowrap border-t border-(--border) font-medium text-sm text-(--text-secondary)'>
+                    <p>{`${startIndex + 1} - ${endIndex} of ${totalItems} results`}</p>
                     <div className='flex items-center gap-4'>
-                        <button>Prev</button>
-                        <button>Next</button>
+                        <p>{`${currentPage} of ${totalPages} pages`}</p>
+                        <div className='flex items-center gap-4'>
+                            <button
+                                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                disabled={currentPage === 1}
+                                className={`px-2 py-1 rounded ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-(--bg-secondary)'}`}
+                            >
+                                Prev
+                            </button>
+                            <button
+                                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                                disabled={currentPage === totalPages}
+                                className={`px-2 py-1 rounded ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-(--bg-secondary)'}`}
+                            >
+                                Next
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            ) : (
+                <div className='min-w-[1200px] flex justify-between w-full py-4 px-8 text-nowrap border-t border-(--border) font-medium text-sm text-(--text-secondary)'>
+                    <p>0 - 0 of 0 results</p>
+                    <div className='flex items-center gap-4'>
+                        <p>0 of 0 pages</p>
+                        <div className='flex items-center gap-4'>
+                            <button type="button" className='cursor-not-allowed'>Prev</button>
+                            <button type="button" className='cursor-not-allowed'>Next</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

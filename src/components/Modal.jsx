@@ -33,6 +33,8 @@ const Modal = ({ closeModal, isModalOpen }) => {
         }
     };
 
+    console.log("Modal coins list: ", filteredCoins)
+
     return (
         <div className="flex justify-center items-center">
             <div
@@ -42,7 +44,7 @@ const Modal = ({ closeModal, isModalOpen }) => {
             <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
                 <div
                     className="bg-(--bg-primary) border border-(--border) rounded-xl shadow-lg w-[640px] h-[480px] transform transition-all duration-300 scale-95 opacity-0 animate-fadeIn pointer-events-auto flex flex-col"
-                    onClick={(e) => e.stopPropagation()} // prevent closing when clicking modal
+                    onClick={(e) => e.stopPropagation()}
                 >
                     {/*Search Input */}
                     <div className="flex-shrink-0">
