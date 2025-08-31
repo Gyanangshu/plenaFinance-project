@@ -60,9 +60,6 @@ const Table = () => {
     const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
     const currentData = watchlist.slice(startIndex, endIndex);
 
-    console.log("Open Menu: ", openMenu)
-    console.log("Watchlist table data: ", watchlist)
-
     return (
         <div className='overflow-x-auto overflow-y-auto border border-(--border) mt-4 rounded-xl'>
             <table className='min-w-[1200px] w-full border-collapse'>

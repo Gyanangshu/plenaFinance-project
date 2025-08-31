@@ -33,8 +33,6 @@ const Modal = ({ closeModal, isModalOpen }) => {
         }
     };
 
-    console.log("Modal coins list: ", filteredCoins)
-
     return (
         <div className="flex justify-center items-center">
             <div

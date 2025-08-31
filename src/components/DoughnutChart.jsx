@@ -1,25 +1,12 @@
-import React from 'react'
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
-// Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const generateColors = (numColors) => {
-    return Array.from({ length: numColors }, () => {
-        const r = Math.floor(Math.random() * 255);
-        const g = Math.floor(Math.random() * 255);
-        const b = Math.floor(Math.random() * 255);
-        return `rgba(${r}, ${g}, ${b}, 0.6)`;
-    });
-};
-
-const DoughnutChart = ({ portfolioData }) => {
+const DoughnutChart = ({ portfolioData, colors }) => {
 
     const labels = portfolioData?.map((coin) => coin.name);
     const values = portfolioData?.map((coin) => coin.value);
-
-    const colors = generateColors(values?.length);
 
     const data = {
         labels,

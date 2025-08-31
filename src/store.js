@@ -19,7 +19,6 @@ const loadState = () => {
   }
 };
 
-
 const rootReducer = combineReducers({
   coins: coinsReducer,
   portfolio: portfolioReducer
