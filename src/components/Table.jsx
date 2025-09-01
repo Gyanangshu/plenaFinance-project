@@ -144,7 +144,7 @@ const Table = () => {
                                     <BsThreeDots onClick={() => handleMenu(coin.id)} className='flex justify-end items-end hover:cursor-pointer' />
 
                                     {openMenu === coin.id && (
-                                        <div ref={menuRef} className='absolute right-15 top-11 bg-(--bg-secondary) rounded-lg border border-(--bg-primary) shadow text-sm text-(--text-secondary) font-medium z-50 min-w-[144px] flex flex-col'>
+                                        <div ref={menuRef} className='absolute animate-fadeIn right-15 top-11 bg-(--bg-secondary) rounded-lg border border-(--bg-primary) shadow text-sm text-(--text-secondary) font-medium z-50 min-w-[144px] flex flex-col'>
                                             <button
                                                 onClick={() => setEditingHoldings({ ...editingHoldings, [coin.id]: coin.holdings || 0 }, setOpenMenu(null))}
                                                 className="hover:cursor-pointer text-nowrap flex items-center justify-center gap-2 py-3 border-b border(--border)"

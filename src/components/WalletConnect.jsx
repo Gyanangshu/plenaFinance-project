@@ -1,13 +1,29 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Button from './Button';
 import { MdOutlineWallet } from 'react-icons/md';
+import { useEffect, useRef, useState } from 'react';
 
 const WalletConnect = () => {
+    const [openMenu, setOpenMenu] = useState(false);
+    const menuRef = useRef(null);
 
     const formatAddress = (addr) => {
         if (!addr) return '';
         return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
     };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setOpenMenu(null);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     return (
         <ConnectButton.Custom>
@@ -46,28 +62,16 @@ const WalletConnect = () => {
                             }
 
                             return (
-                                <div className="wallet-connected" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div className="relative">
                                     <div>
-                                        <div style={{ fontFamily: 'monospace', fontWeight: '600' }}>
-                                            {formatAddress(account.address)}
-                                        </div>
-                                        <div style={{ fontSize: '12px', color: '#22c55e' }}>
-                                            Connected
-                                        </div>
+                                        <Button handleClick={() => setOpenMenu(!openMenu)} icon={<MdOutlineWallet />} text={"Connected"} borderRadius={"rounded-3xl border border-[#1F6619]"} bgColor={"bg-(--neon-green)"} textColor={"text-(--text-neon-button)"} />
                                     </div>
-                                    <button
-                                        onClick={openAccountModal}
-                                        style={{ 
-                                            padding: '4px 8px', 
-                                            background: '#ef4444', 
-                                            color: 'white', 
-                                            border: 'none', 
-                                            borderRadius: '4px', 
-                                            cursor: 'pointer' 
-                                        }}
-                                    >
-                                        Disconnect
-                                    </button>
+                                    {openMenu && (
+                                        <div ref={menuRef} className='absolute animate-fadeIn -bottom-28 right-0 bg-(--bg-secondary) rounded-lg border border-(--bg-primary) shadow text-sm text-(--text-secondary) font-medium z-50 min-w-[144px] flex flex-col gap-4 py-4 px-8 '>
+                                            <p className='font-semibold text-sm'>{formatAddress(account.address)}</p>
+                                            <Button icon={<MdOutlineWallet />} handleClick={openAccountModal} text={"Disconnect"} borderRadius={"rounded-3xl border border-red-800"} bgColor={"bg-red-500"} textColor={"text-white"} />
+                                        </div>
+                                    )}
                                 </div>
                             );
                         })()}

@@ -2,7 +2,8 @@ import { lazy, Suspense, useMemo, useState } from 'react'
 import icon from "../icon.svg"
 import Button from '../components/Button';
 import { FaStar, FaPlus } from "react-icons/fa";
-import { LuRefreshCw } from "react-icons/lu";
+import { IoMdClose } from "react-icons/io";
+import { LuRefreshCw, LuMenu } from "react-icons/lu";
 import Modal from '../components/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions } from '../actions/watchlistActions';
@@ -18,6 +19,7 @@ const Dashboard = () => {
     const closeModal = () => setIsModalOpen(false);
     const dispatch = useDispatch();
     const watchlist = useSelector(state => state.portfolio.watchlist);
+    const [mobileMenu, setMobileMenu] = useState(false);
 
     const portfolioTotal = watchlist.reduce((sum, coin) => sum + (coin.value || 0), 0);
 
@@ -43,18 +45,33 @@ const Dashboard = () => {
     const colors = useMemo(() => generateColors(values?.length || 0), [values?.length]);
 
     const showDoughnut = watchlist?.map((item) => item.holdings)
-    console.log(showDoughnut)
+    console.log("showDoughnut: ", showDoughnut)
 
     return (
         <div className='md:p-(--large-page-padding) p-(--small-page-padding)'>
             <div className='flex items-center justify-between'>
                 <div className='flex items-center gap-3'>
                     <img loading='lazy' src={icon} alt="icon" />
-                    <h1 className='text-xl font-semibold'>Token Portfolio</h1>
+                    <h1 className='text-xl font-semibold text-nowrap'>Token Portfolio</h1>
                 </div>
 
                 <Suspense fallback={<ImSpinner2 className="w-8 h-8 animate-spin text-(--neon-green)" />}>
-                    <WalletConnect />
+                    <div className='largeNav'>
+                        <WalletConnect />
+                    </div>
+                    <div className='hamburger relative'>
+                        {mobileMenu ?
+                            <button type='button' onClick={() => setMobileMenu(!mobileMenu)}><IoMdClose className='text-2xl' /></button>
+                            :
+                            <button type='button' onClick={() => setMobileMenu(!mobileMenu)}><LuMenu className='text-2xl' /></button>
+                        }
+
+                        {mobileMenu && (
+                            <div className='absolute top-10 right-0 animate-fadeIn'>
+                                <span onClick={() => setMobileMenu(false)}><WalletConnect /></span>
+                            </div>
+                        )}
+                    </div>
                 </Suspense>
             </div>
 
@@ -75,28 +92,31 @@ const Dashboard = () => {
                         </div>
                         <div className='mt-4 w-full flex gap-5 xl:flex-row flex-col items-center xl:items-start h-full'>
                             <Suspense fallback={<div className='w-full h-full my-8 flex items-center justify-center'><ImSpinner2 className="w-8 h-8 animate-spin text-(--neon-green)" /></div>}>
-                                {/* {showDoughnut.length ?
-                                    <DoughnutChart portfolioData={watchlist} colors={colors} />
+                                {showDoughnut.some((item) => item > 0) ?
+                                    <>
+                                        <DoughnutChart portfolioData={watchlist} colors={colors} />
+                                        <div className='flex flex-col justify-between gap-2 h-auto w-full'>
+                                            {watchlist.map((coin, i, arr) => {
+                                                const total = arr.reduce((acc, c) => acc + c.value, 0);
+                                                const percentage = ((coin.value / total) * 100).toFixed(2);
+                                                return (
+                                                    <div key={i} className='flex justify-between flex-1 w-full gap-5 mt-2' style={{ color: colors[i].replace("0.6", "1") }}>
+                                                        <p className='font-medium'>{coin.name} ({(coin.symbol).toUpperCase()})</p>
+                                                        <p className='text-(--text-secondary) font-medium'>{percentage}%</p>
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+                                    </>
                                     :
                                     <div className='w-full flex flex-col gap-1 mt-2'>
-                                        <h3>No Data Available</h3>
+                                        <h3 className='text-(--text-secondary)'>No Data Available</h3>
                                         <p className='text-(--text-secondary) text-sm'>Start by updating your holdings for a token</p>
                                     </div>
-                                } */}
-                                <DoughnutChart portfolioData={watchlist} colors={colors} />
+                                }
+                                {/* <DoughnutChart portfolioData={watchlist} colors={colors} /> */}
 
-                                <div className='flex flex-col justify-between gap-2 h-auto w-full'>
-                                    {watchlist.map((coin, i, arr) => {
-                                        const total = arr.reduce((acc, c) => acc + c.value, 0);
-                                        const percentage = ((coin.value / total) * 100).toFixed(2);
-                                        return (
-                                            <div key={i} className='flex justify-between flex-1 w-full gap-5 mt-2' style={{ color: colors[i].replace("0.6", "1") }}>
-                                                <p className='font-medium'>{coin.name} ({(coin.symbol).toUpperCase()})</p>
-                                                <p className='text-(--text-secondary) font-medium'>{percentage}%</p>
-                                            </div>
-                                        )
-                                    })}
-                                </div>
+
                             </Suspense>
                         </div>
                     </div>
