@@ -101,8 +101,7 @@ const Modal = ({ closeModal, isModalOpen }) => {
                                                 disabled={isInWatchlist}
                                                 className="mr-3 h-[15px] w-[15px] appearance-none rounded-full border-2 border-gray-400 checked:border-none checked:bg-(--neon-green) relative"
                                             />
-                                        </div>
-                                        
+                                        </div> 
                                     </div>
                                 );
                             })}

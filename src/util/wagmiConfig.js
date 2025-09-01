@@ -6,5 +6,4 @@ export const config = getDefaultConfig({
   projectId: import.meta.env.VITE_WALLET_PROJECT_ID,
   chains: [mainnet, polygon, optimism, arbitrum, base],
   ssr: false,
-
 });

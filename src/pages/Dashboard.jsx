@@ -57,7 +57,7 @@ const Dashboard = () => {
         <div className='md:p-(--large-page-padding) p-(--small-page-padding)'>
             <div className='flex items-center justify-between'>
                 <div className='flex items-center gap-3'>
-                    <img loading='lazy' src={icon} alt="icon" />
+                    <img loading='lazy' src={icon} alt="icon" className='w-7 h-7'/>
                     <h1 className='text-xl font-semibold text-nowrap'>Token Portfolio</h1>
                 </div>
 
@@ -120,9 +120,6 @@ const Dashboard = () => {
                                         <p className='text-(--text-secondary) text-sm'>Start by updating your holdings for a token</p>
                                     </div>
                                 }
-                                {/* <DoughnutChart portfolioData={watchlist} colors={colors} /> */}
-
-
                             </Suspense>
                         </div>
                     </div>
