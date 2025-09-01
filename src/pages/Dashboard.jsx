@@ -74,7 +74,7 @@ const Dashboard = () => {
 
                         {mobileMenu && (
                             <div className='absolute top-10 right-0 animate-fadeIn'>
-                                <span onClick={() => setMobileMenu(false)}><WalletConnect /></span>
+                                <span><WalletConnect /></span>
                             </div>
                         )}
                     </div>

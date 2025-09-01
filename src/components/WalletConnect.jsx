@@ -67,7 +67,7 @@ const WalletConnect = () => {
                                         <Button handleClick={() => setOpenMenu(!openMenu)} icon={<MdOutlineWallet />} text={"Connected"} borderRadius={"rounded-3xl border border-[#1F6619]"} bgColor={"bg-(--neon-green)"} textColor={"text-(--text-neon-button)"} />
                                     </div>
                                     {openMenu && (
-                                        <div className='absolute animate-fadeIn -bottom-28 right-0 bg-(--bg-secondary) rounded-lg border border-(--bg-primary) shadow text-sm text-(--text-secondary) font-medium z-50 min-w-[144px] flex flex-col gap-4 py-4 px-8 '>
+                                        <div ref={menuRef} className='absolute animate-fadeIn -bottom-28 right-0 bg-(--bg-secondary) rounded-lg border border-(--bg-primary) shadow text-sm text-(--text-secondary) font-medium z-50 min-w-[144px] flex flex-col gap-4 py-4 px-8 '>
                                             <p className='font-semibold text-sm'>{formatAddress(account.address)}</p>
                                             <Button icon={<MdOutlineWallet />} handleClick={openAccountModal} text={"Disconnect"} borderRadius={"rounded-3xl border border-red-800"} bgColor={"bg-red-500"} textColor={"text-white"} />
                                         </div>
