@@ -1,4 +1,3 @@
-import React from 'react'
 
 const Button = ({icon, text, borderRadius, bgColor, textColor, handleClick, disable}) => {
     return (

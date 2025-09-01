@@ -20,15 +20,22 @@ const Dashboard = () => {
     const dispatch = useDispatch();
     const watchlist = useSelector(state => state.portfolio.watchlist);
     const [mobileMenu, setMobileMenu] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     const portfolioTotal = watchlist.reduce((sum, coin) => sum + (coin.value || 0), 0);
 
     const lastUpdated = useSelector((state) => state.portfolio.lastUpdated);
 
     const handleManualRefresh = () => {
+        setIsRefreshing(true)
+
         if (watchlist.length > 0) {
             dispatch(actions.updateWatchlistData());
         }
+
+        setTimeout(() => {
+            setIsRefreshing(false);
+        }, 1000);
     };
 
     const values = watchlist?.map((coin) => coin.value);
@@ -45,7 +52,6 @@ const Dashboard = () => {
     const colors = useMemo(() => generateColors(values?.length || 0), [values?.length]);
 
     const showDoughnut = watchlist?.map((item) => item.holdings)
-    console.log("showDoughnut: ", showDoughnut)
 
     return (
         <div className='md:p-(--large-page-padding) p-(--small-page-padding)'>
@@ -81,7 +87,7 @@ const Dashboard = () => {
                     <div className='flex flex-col justify-between gap-5 h-auto  w-full'>
                         <div className='flex flex-col gap-2'>
                             <p className='text-(--text-secondary) font-medium'>Portfolio Total</p>
-                            <p className='text-[56px] font-medium'>${portfolioTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                            <p className='portfoliotext text-[56px] text-wrap font-medium'>${portfolioTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                         </div>
                         <div className='text-(--text-secondary) text-xs '>Last updated: {lastUpdated ? new Date(lastUpdated).toLocaleTimeString() : '-'}</div>
                     </div>
@@ -131,11 +137,12 @@ const Dashboard = () => {
                         </div>
                         <div className='flex items-center gap-3'>
                             <div className='hidden md:block'>
-                                <Button handleClick={handleManualRefresh} icon={<LuRefreshCw className='text-(--text-secondary) text-sm' />} text={"Refresh Prices"} borderRadius={'rounded-lg border border-[#0000001F]'} bgColor={"bg-(--bg-secondary)"}
+                                <Button handleClick={handleManualRefresh} 
+                                icon={<LuRefreshCw className={`text-(--text-secondary) text-sm ${isRefreshing ? 'animate-spin' : ''}`} />} text={"Refresh Prices"} borderRadius={'rounded-lg border border-[#0000001F]'} bgColor={"bg-(--bg-secondary)"}
                                 />
                             </div>
                             <button onClick={handleManualRefresh} className='md:hidden bg-(--bg-secondary) rounded-lg border border-[#0000001F] p-3'>
-                                <LuRefreshCw className='text-(--text-secondary) text-sm' />
+                                <LuRefreshCw className={`text-(--text-secondary) text-sm ${isRefreshing ? 'animate-spin' : ''}`} />
                             </button>
 
                             <Button
